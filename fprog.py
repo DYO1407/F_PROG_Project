@@ -66,35 +66,52 @@ def count_word_occurrences(word_list):
 #word_occurrences = count_word_occurrences(word_list)
 #print(word_occurrences)  # Output: {'apple': 3, 'banana': 2, 'cherry': 2}
 
+def map_reduce_term_density(word_data):
+    mapped_data = map(lambda word: word[1], word_data)
 
-import itertools
-from itertools import repeat
+    # Reduce Phase: Calculate total distance and word count
+    def reducer(accumulator, current):   
+        (last_index, total_distance, count) = accumulator
+        if last_index == 0:
+            current = current
+        print(accumulator)
+        print(current)
+        distance = current - last_index
+        
+        return (current, total_distance + distance, count + 1)
+
+    current, total_distance, count = reduce(reducer, mapped_data, (word_data[0][1], 0, 0))
+    #Calculate average distance and term density
+    average_distance = total_distance / count if count > 1 else 0
+    term_density = count / average_distance if average_distance != 0 else 0
+
+    return term_density
+
 def give_position_in_text(word, text):
     #if word in text:
     #positions = 
-    return [(index, value) for index, value in enumerate(text) if value is word]
+    return [(value, index) for index, value in enumerate(text) if value is word]
 
+
+import itertools
+from itertools import repeat
 def calc_distance(word_list, chapter):
     TmpOccurences = map(give_position_in_text, word_list, repeat(chapter))
     occurences = []
     for list in TmpOccurences:
-        for list1 in list:
-            occurences.append(list1[0])
-    occurences.sort()
-    def calc_averageDistance(x,y):
-        return 
-    
-    averageDistances = reduce(calc_averageDistance, occurences)
-    print(occurences)
-    print(averageDistances)
+        for list in list:
+            occurences.append(list)
+    occurences.sort(key = lambda x: x[1])
+    return map_reduce_term_density(occurences)
 
 chapter = ['hello', 'welcome', 'to', 'demofile', 'txt','this', 'file', 'is', 'for', 'testing', 'purposes', 'good', 'luck', 'hello']     
 term = ['hello', 'is', 'good']
-calc_distance(term, chapter)
+calc_distance(term,chapter)
 
+#word_data = [("apple", 1), ("banana", 4), ("orange", 8), ("pear", 12), ("orange", 22), ("banana", 30)]
+#term_density = map_reduce_term_density(word_data)
+#print(term_density)
 
-
-#calc_distance(maped)
 
 def compare_war_vs_peace(distanceW, distanceP):
     lambda x: "peace-related" if distanceP > distanceW else "war-related"
@@ -120,6 +137,34 @@ text = read_file_to_vector('example.txt')
 """
 
 
+import itertools
+from itertools import repeat
+def give_position_in_text(word, text):
+    #if word in text:
+    #positions = 
+    return [(index, value) for index, value in enumerate(text) if value is word]
+
+def calc_distance(word_list, chapter):
+    TmpOccurences = map(give_position_in_text, word_list, repeat(chapter))
+    occurences = []
+    for list in TmpOccurences:
+        for list1 in list:
+            occurences.append(list1[0])
+    occurences.sort()
+    def calc_averageDistance(x,y):
+        return 
+    
+    #averageDistances = reduce(calc_averageDistance, occurences)
+    #print(occurences)
+    #print(averageDistances)
+
+chapter = ['hello', 'welcome', 'to', 'demofile', 'txt','this', 'file', 'is', 'for', 'testing', 'purposes', 'good', 'luck', 'hello']     
+term = ['hello', 'is', 'good']
+calc_distance(term, chapter)
+
+
+
+#calc_distance(maped)
 
 
 
